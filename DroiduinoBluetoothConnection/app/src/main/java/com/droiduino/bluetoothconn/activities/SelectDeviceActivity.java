@@ -1,4 +1,4 @@
-package com.droiduino.bluetoothconn;
+package com.droiduino.bluetoothconn.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -10,6 +10,9 @@ import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.view.View;
 
+import com.droiduino.bluetoothconn.models.DeviceInfoModel;
+import com.droiduino.bluetoothconn.adapters.DeviceListAdapter;
+import com.droiduino.bluetoothconn.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -52,6 +55,5 @@ public class SelectDeviceActivity extends AppCompatActivity {
             });
             snackbar.show();
         }
-
     }
 }
