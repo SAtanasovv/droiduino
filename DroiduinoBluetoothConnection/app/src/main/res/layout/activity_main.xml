@@ -9,6 +9,13 @@
     android:background      ="@android:color/background_light"
     tools:context           =".activities.MainActivity">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id                          ="@+id/guideline"
+        android:layout_width                ="wrap_content"
+        android:layout_height               ="wrap_content"
+        android:orientation                 ="horizontal"
+        app:layout_constraintGuide_percent  ="0.46" />
+
     <androidx.appcompat.widget.Toolbar
         android:id                              ="@+id/toolbar"
         android:layout_width                    ="match_parent"
@@ -23,21 +30,6 @@
         app:title                               ="Bluetooth Connection"
         app:titleTextColor                      ="@android:color/background_light" />
 
-    <ImageView
-        android:id                              ="@+id/imageView"
-        android:layout_width                    ="200dp"
-        android:layout_height                   ="300dp"
-        android:layout_marginTop                ="24dp"
-        android:background                      ="@color/colorOff"
-        android:contentDescription              ="Visual LED"
-        android:scaleType                       ="centerCrop"
-        app:layout_constraintEnd_toEndOf        ="parent"
-        app:layout_constraintHorizontal_bias    ="0.5"
-        app:layout_constraintStart_toStartOf    ="parent"
-        app:layout_constraintTop_toBottomOf     ="@+id/toolbar"
-        app:srcCompat                           ="@drawable/ic_bulb_light"
-        tools:ignore                            ="VectorDrawableCompat" />
-
     <Button
         android:id                              ="@+id/buttonConnect"
         style                                   ="@style/Widget.AppCompat.Button.Borderless"
@@ -50,23 +42,93 @@
         app:layout_constraintTop_toTopOf        ="@+id/toolbar" />
 
     <Button
-        android:id                              ="@+id/buttonToggle"
+        android:id                              ="@+id/buttonManual"
         style                                   ="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width                    ="200dp"
+        android:layout_width                    ="wrap_content"
         android:layout_height                   ="wrap_content"
-        android:layout_marginTop                ="400dp"
-        android:text                            ="Turn On"
+        android:text                            ="MANUAL"
         android:textSize                        ="24sp"
+        android:layout_marginBottom             ="8dp"
         app:layout_constraintEnd_toEndOf        ="parent"
-        app:layout_constraintHorizontal_bias    ="0.5"
         app:layout_constraintStart_toStartOf    ="parent"
-        app:layout_constraintTop_toTopOf        ="parent" />
+        app:layout_constraintBottom_toTopOf     ="@id/buttonForward" />
+    <Button
+        android:id                              ="@+id/buttonForward"
+        style                                   ="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width                    ="wrap_content"
+        android:layout_height                   ="wrap_content"
+        android:text                            ="Forward"
+        android:textSize                        ="24sp"
+        android:layout_marginBottom             ="8dp"
+        app:layout_constraintEnd_toEndOf        ="parent"
+        app:layout_constraintStart_toStartOf    ="parent"
+        app:layout_constraintBottom_toTopOf     ="@id/guideline" />
+
+    <Button
+        android:id                              ="@+id/buttonLeft"
+        style                                   ="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width                    ="wrap_content"
+        android:layout_height                   ="wrap_content"
+        android:text                            ="Left"
+        android:textSize                        ="24sp"
+        android:layout_marginStart              ="16dp"
+        app:layout_constraintStart_toStartOf    ="parent"
+        app:layout_constraintTop_toBottomOf     ="@id/buttonForward"
+        app:layout_constraintBottom_toTopOf     ="@id/buttonBackward"/>
+    <Button
+        android:id                              ="@+id/buttonRight"
+        style                                   ="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width                    ="wrap_content"
+        android:layout_height                   ="wrap_content"
+        android:text                            ="Right"
+        android:textSize                        ="24sp"
+        android:layout_marginEnd                ="16dp"
+        app:layout_constraintEnd_toEndOf        ="parent"
+        app:layout_constraintTop_toBottomOf     ="@id/buttonForward"
+        app:layout_constraintBottom_toTopOf     ="@id/buttonBackward"/>
+
+    <Button
+        android:id                              ="@+id/buttonStop"
+        style                                   ="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width                    ="wrap_content"
+        android:layout_height                   ="wrap_content"
+        android:text                            ="Stop"
+        android:textSize                        ="24sp"
+        android:layout_marginTop                ="8dp"
+        app:layout_constraintEnd_toEndOf        ="parent"
+        app:layout_constraintStart_toStartOf    ="parent"
+        app:layout_constraintTop_toBottomOf     ="@id/buttonForward" />
+
+    <Button
+        android:id                              ="@+id/buttonBackward"
+        style                                   ="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width                    ="wrap_content"
+        android:layout_height                   ="wrap_content"
+        android:text                            ="Backward"
+        android:textSize                        ="24sp"
+        android:layout_marginTop                ="8dp"
+        app:layout_constraintEnd_toEndOf        ="parent"
+        app:layout_constraintStart_toStartOf    ="parent"
+        app:layout_constraintTop_toBottomOf     ="@id/buttonLeft" />
+
+    <Button
+        android:id                              ="@+id/buttonAutonomous"
+        style                                   ="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width                    ="wrap_content"
+        android:layout_height                   ="wrap_content"
+        android:text                            ="Autonomous"
+        android:textSize                        ="24sp"
+        android:layout_marginTop                ="8dp"
+        app:layout_constraintEnd_toEndOf        ="parent"
+        app:layout_constraintStart_toStartOf    ="parent"
+        app:layout_constraintTop_toBottomOf     ="@id/buttonBackward" />
 
     <ProgressBar
         android:id                              ="@+id/progressBar"
         style                                   ="?android:attr/progressBarStyle"
         android:layout_width                    ="wrap_content"
         android:layout_height                   ="wrap_content"
+        android:visibility                      ="gone"
         app:layout_constraintBottom_toBottomOf  ="parent"
         app:layout_constraintEnd_toEndOf        ="parent"
         app:layout_constraintHorizontal_bias    ="0.5"
@@ -85,7 +147,6 @@
         app:layout_constraintEnd_toEndOf        ="parent"
         app:layout_constraintHorizontal_bias    ="0.5"
         app:layout_constraintStart_toStartOf    ="parent"
-        app:layout_constraintTop_toBottomOf     ="@+id/buttonToggle" />
-
+        app:layout_constraintTop_toBottomOf     ="@+id/toolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

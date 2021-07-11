@@ -25,7 +25,14 @@ import java.util.UUID;
 
 import static android.content.ContentValues.TAG;
 import static com.droiduino.bluetoothconn.Utils.CONNECTING_STATUS;
+import static com.droiduino.bluetoothconn.Utils.MESSAGE_AUTONOMOUS;
+import static com.droiduino.bluetoothconn.Utils.MESSAGE_BACKWARD;
+import static com.droiduino.bluetoothconn.Utils.MESSAGE_FORWARD;
+import static com.droiduino.bluetoothconn.Utils.MESSAGE_LEFT;
+import static com.droiduino.bluetoothconn.Utils.MESSAGE_MANUAL;
 import static com.droiduino.bluetoothconn.Utils.MESSAGE_READ;
+import static com.droiduino.bluetoothconn.Utils.MESSAGE_RIGHT;
+import static com.droiduino.bluetoothconn.Utils.MESSAGE_STOP;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,9 +46,13 @@ public class MainActivity extends AppCompatActivity {
     public          Toolbar                 toolbar;
     public          ProgressBar             progressBar;
     public          TextView                textViewInfo;
-    public          Button                  buttonToggle;
-    public          ImageView               imageView;
-
+    public          Button                  buttonForward;
+    public          Button                  buttonBackward;
+    public          Button                  buttonLeft;
+    public          Button                  buttonRight;
+    public          Button                  buttonStop;
+    public          Button                  buttonAutonomous;
+    public          Button                  buttonManual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,47 +65,77 @@ public class MainActivity extends AppCompatActivity {
 
     private void init(){
         // UI Initialization
-        buttonConnect      = findViewById(R.id.buttonConnect);
-        toolbar            = findViewById(R.id.toolbar);
-        progressBar        = findViewById(R.id.progressBar);
-        textViewInfo       = findViewById(R.id.textViewInfo);
-        buttonToggle       = findViewById(R.id.buttonToggle);
-        imageView          = findViewById(R.id.imageView);
+        buttonConnect       = findViewById(R.id.buttonConnect);
+        toolbar             = findViewById(R.id.toolbar);
+        progressBar         = findViewById(R.id.progressBar);
+        textViewInfo        = findViewById(R.id.textViewInfo);
+        buttonForward       = findViewById(R.id.buttonForward);
+        buttonBackward      = findViewById(R.id.buttonBackward);
+        buttonLeft          = findViewById(R.id.buttonLeft);
+        buttonRight         = findViewById(R.id.buttonRight);
+        buttonStop          = findViewById(R.id.buttonStop);
+        buttonAutonomous    = findViewById(R.id.buttonAutonomous);
+        buttonManual        = findViewById(R.id.buttonManual);
 
-        buttonToggle.setEnabled(false);
-        progressBar.setVisibility(View.GONE);
-        imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
+        buttonForward.setEnabled(false);
+        buttonBackward.setEnabled(false);
+        buttonLeft.setEnabled(false);
+        buttonRight.setEnabled(false);
+        buttonStop.setEnabled(false);
+        buttonAutonomous.setEnabled(false);
+        buttonManual.setEnabled(false);
 
         // Select Bluetooth Device
         buttonConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Move to adapter list
-                Intent intent = new Intent(MainActivity.this, SelectDeviceActivity.class);
-                startActivity(intent);
+          // Move to adapter list
+          Intent intent = new Intent(MainActivity.this, SelectDeviceActivity.class);
+          startActivity(intent);
             }
         });
 
-        // Button to ON/OFF LED on Arduino Board
-        buttonToggle.setOnClickListener(new View.OnClickListener() {
+        buttonForward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String cmdText = null;
-                String btnState = buttonToggle.getText().toString().toLowerCase();
-                switch (btnState){
-                    case "turn on":
-                        buttonToggle.setText("Turn Off");
-                        // Command to turn on LED on Arduino. Must match with the command in Arduino code
-                        cmdText = "<turn on>";
-                        break;
-                    case "turn off":
-                        buttonToggle.setText("Turn On");
-                        // Command to turn off LED on Arduino. Must match with the command in Arduino code
-                        cmdText = "<turn off>";
-                        break;
-                }
-                // Send command to Arduino board
-                connectedThread.write(cmdText);
+                connectedThread.write(MESSAGE_FORWARD);
+            }
+        });
+        buttonBackward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                connectedThread.write(MESSAGE_BACKWARD);
+            }
+        });
+        buttonLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                connectedThread.write(MESSAGE_LEFT);
+            }
+        });
+        buttonRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                connectedThread.write(MESSAGE_RIGHT);
+            }
+        });
+        buttonStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                connectedThread.write(MESSAGE_STOP);
+            }
+        });
+        buttonAutonomous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                connectedThread.write(MESSAGE_AUTONOMOUS);
+            }
+        });
+
+        buttonManual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                connectedThread.write(MESSAGE_MANUAL);
             }
         });
     }
@@ -105,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         if (deviceName != null){
             // Get the device address to make BT Connection
             deviceAddress = getIntent().getStringExtra("deviceAddress");
-            // Show progree and connection status
+            // Show progress and connection status
             toolbar.setSubtitle("Connecting to " + deviceName + "...");
             progressBar.setVisibility(View.VISIBLE);
             buttonConnect.setEnabled(false);
@@ -124,7 +165,13 @@ public class MainActivity extends AppCompatActivity {
                                 toolbar.setSubtitle("Connected to " + deviceName);
                                 progressBar.setVisibility(View.GONE);
                                 buttonConnect.setEnabled(true);
-                                buttonToggle.setEnabled(true);
+                                buttonForward.setEnabled(true);
+                                buttonBackward .setEnabled(true);
+                                buttonLeft.setEnabled(true);
+                                buttonRight .setEnabled(true);
+                                buttonStop.setEnabled(true);
+                                buttonAutonomous.setEnabled(true);
+                                buttonManual.setEnabled(true);
                                 break;
                             case -1:
                                 toolbar.setSubtitle("Device fails to connect");
@@ -189,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return;
             }
-
             connectedThread = new ConnectedThread(mmSocket);
             connectedThread.run();
         }
@@ -206,36 +252,32 @@ public class MainActivity extends AppCompatActivity {
 
     /* =============================== Thread for Data Transfer =========================================== */
     public static class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
+        private final BluetoothSocket   mmSocket;
+        private final InputStream       mmInStream;
+        private final OutputStream      mmOutStream;
 
         public ConnectedThread(BluetoothSocket socket) {
-            mmSocket = socket;
-            InputStream tmpIn = null;
+            mmSocket            = socket;
+            InputStream tmpIn   = null;
             OutputStream tmpOut = null;
 
-            // Get the input and output streams, using temp objects because
-            // member streams are final
             try {
-                tmpIn = socket.getInputStream();
-                tmpOut = socket.getOutputStream();
+                tmpIn   = socket.getInputStream();
+                tmpOut  = socket.getOutputStream();
             } catch (IOException e) { }
 
-            mmInStream = tmpIn;
+            mmInStream  = tmpIn;
             mmOutStream = tmpOut;
         }
 
         public void run() {
-            byte[] buffer = new byte[1024];  // buffer store for the stream
-            int bytes = 0; // bytes returned from read()
-            // Keep listening to the InputStream until an exception occurs
+            byte[] buffer   = new byte[1024];   // buffer store for the stream
+            int bytes       = 0;                // bytes returned from read()
+                                                // Keep listening to the InputStream until an exception occurs
             while (true) {
                 try {
-                    /*
-                    Read from the InputStream from Arduino until termination character is reached.
-                    Then send the whole String message to GUI Handler.
-                     */
+                    /* Read from the InputStream from Arduino until termination character is reached.
+                    Then send the whole String message to GUI Handler.*/
                     buffer[bytes] = (byte) mmInStream.read();
                     String readMessage;
                     if (buffer[bytes] == '\n'){
@@ -252,7 +294,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
         /* Call this from the main activity to send data to the remote device */
         public void write(String input) {
             byte[] bytes = input.getBytes(); //converts entered String into bytes
